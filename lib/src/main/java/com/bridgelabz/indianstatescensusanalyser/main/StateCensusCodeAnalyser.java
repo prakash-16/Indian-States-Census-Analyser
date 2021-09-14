@@ -13,7 +13,7 @@ import com.opencsv.CSVReader;
 public class StateCensusCodeAnalyser {
 
 	public int i = 0;
-	ArrayList<IndianStateCensus> census = new ArrayList<IndianStateCensus>();
+	ArrayList<IndianStateCode> state = new ArrayList<IndianStateCode>();
 
 	public int loadDataFromCensus(String filePath) throws IOException, StateCensusDataException {
 		try {
@@ -22,15 +22,14 @@ public class StateCensusCodeAnalyser {
 			List<String[]> data = reader.readAll();
 			data.stream().forEach(n -> {
 				Iterator<String> iter = Arrays.stream(n).iterator();
-				String state = iter.next();
-				String population = iter.next();
-				String area = iter.next();
-				String density = iter.next();
+				String srNo = iter.next();
+				String stateName = iter.next();
+				String TIN = iter.next();
+				String stateCode = iter.next();
 				if (i == 0) {
 					i++;
 				} else {
-					census.add(new IndianStateCensus(state, Long.parseLong(population), Long.parseLong(area),
-							Long.parseLong(density)));
+					state.add(new IndianStateCode(Integer.parseInt(srNo), stateName, Integer.parseInt(TIN), stateCode));
 				}
 			});
 			reader.close();
@@ -39,6 +38,6 @@ public class StateCensusCodeAnalyser {
 		} catch (IllegalStateException x) {
 			throw new StateCensusDataException(x.getMessage(), ExceptionType.Parse_Conversion_Error);
 		}
-		return census.size();
+		return state.size();
 	}
 }
